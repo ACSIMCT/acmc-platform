@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <title>ACMC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="script.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body style="background-color: #325aa0;margin: 8px 0;">
+    <img id="bg" src='../assets/bg.png' style="opacity:0.3;filter: blur(3px);
+    max-width:100%;max-height:100%;width:100vw;height: 100vh;
+    object-fit: cover;">
+    <div id="head">
+        <div id="timer">
+        </div>
+        <div><img src="../assets/logo.png" style="max-height:50px;"></div>
+        <!--div class="acmc" style="padding: 0 10px;justify-content: center;flex:1;font-size: 50px;">ACMC 2022</div-->
+        <div id="name" style="padding: 10px;justify-content: flex-end;flex:1;text-align: right;padding-right: 20px;">
+        </div>
+    </div>
+    <div id="instruct-square">
+        <h1 style="margin:5px;text-align: center;font-size: xx-large;">Instructions to Candidates</h1>
+        <hr color="black" style="border-width:0.5px">
+        <ul id="instructions">
+        </ul>
+        <hr color="black" style="border-width:0.5px">
+        <div>
+            <button type="button" id="startBtn" class="btnDisable" disabled onclick="start();"></button>
+        </div>
+    </div>
+    <div id="load" class="hidden">
+        <div class="popup">
+            <div style="margin: 0 0 20px;font-size: 20px;">Loading...</div>
+            <div class="loader"></div>
+
+        </div>
+        <div class="dimmer"></div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    getName();
+    getTime();
+    getInstructions();
+    window.addEventListener("focus",updateTime);
+    var yr = new Date().getFullYear();
+    document.getElementById("acmc").innerHTML += " "+ yr; 
+    document.title += " "+ yr + " Instructions";
+</script>

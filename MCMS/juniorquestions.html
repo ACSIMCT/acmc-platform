@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta author="Lee Wai Kin & Dominic Bryan">
+    <script src="https://kit.fontawesome.com/26c6ac6f54.js" crossorigin="anonymous"></script>
+    <script src="mcmsscript.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <link rel="stylesheet" href="contentstyle.css">
+    <title>Edit Junior Questions</title>
+</head>
+<body>
+    <div class="header sidebar" id="logo">
+        <h2>Math Competition Management System</h2>
+    </div>
+    <div class="header centre">
+        <h1 style="padding-left: 24px;">Edit Junior Questions</h1>
+    </div>
+    <div class="main-content sidebar">
+        <button class="sidebtn" onclick="window.location.href='dashboard'"><span>Dashboard</span></button>
+        <button id="the-button"  class="sidebtn" onclick="window.location.href='juniorquestions'"><span>Edit Junior<br>Questions</span></button>
+        <button class="sidebtn" onclick="window.location.href='seniorquestions'"><span>Edit Senior<br>Questions</span></button>
+        <button class="sidebtn" onclick="window.location.href='juniorparticipants'"><span>Edit Junior<br>Participants</span></button>
+        <button class="sidebtn" onclick="window.location.href='seniorparticipants'"><span>Edit Senior<br>Participants</span></button>
+        <button class="sidebtn" value="juniordownload" onclick="window.location.href='juniordownloadpage'"><span>View Junior<br>Results</span></button>
+        <button class="sidebtn" value="seniordownload" onclick="window.location.href='seniordownloadpage'"><span>View Senior<br>Results</span></button>
+        <button id = "logout" class="sidebtn" onclick="window.location.href='index'"><i class="fa-solid fa-arrow-right-from-bracket"></i>  <span>Log Out</span></button>
+    </div>
+    <div class="main-content centre" id="qnwrapper" style="flex-direction: column;">
+        <div class="centre-button">
+            <button style="width: max-content; padding: 18px; margin: 18px" onClick="updateQuestions('junior', getQnArr(nummcq, numsa))"><i class="fa-solid fa-floppy-disk"></i> <span>Save</span></button>
+        </div>
+        <div class="questions" id="mcq">
+            <h2>Question Autocounter (This is a backend problem)</h2>
+            <div class="image-container">
+                <div class="question-picture empty">
+                    <i class="fa fa-plus"></i> Add/Change Image (Max Size: 2MB)
+                </div>
+                <input type="file" class="image-input" accept="image/*" onchange="handleImageUpload(event, 1)">
+            </div>
+            <div class="optionscontainer" id="optionscontainer" style="display: flex; flex-direction: row; column-gap: 12px;">
+                <div class="options unselected A" onclick="select('A', 1)">A</div>
+                <div class="options unselected B" onclick="select('B', 1)">B</div>
+                <div class="options unselected C" onclick="select('C', 1)">C</div>
+                <div class="options unselected D" onclick="select('D', 1)">D</div>
+                <div class="options unselected E" onclick="select('E', 1)">E</div>
+            </div>
+        </div>
+        <!-- Repeat the above HTML structure for each question, changing the ID and function parameters -->
+
+        <div class="questions" id="srq">
+            <h2>Question Autocounter (This is a backend problem)</h2>
+            <div class="image-container">
+                <div class="question-picture empty">
+                    <i class="fa fa-plus"></i> Add/Change Image (Max Size: 2MB)
+                </div>
+                <input type="file" class="image-input" accept="image/*" onchange="handleImageUpload(event, 1)";>
+            </div>
+            <div class="input-fields" style="margin-top: 12px;">
+                <label for="question" style="font: 24px 'Montserrat', sans-serif; font-weight: 600;">Answer:</label>
+                <input type="number" id="answer-input" class="answer-input">
+            </div>
+        </div>
+    </div>   
+    <div id="load" class="hidden">
+        <div class="popup">
+            <div class="loader-text">Loading...</div>
+            <div class="loader"></div>
+        </div>
+        <div class="dimmer"></div>
+    </div>         
+</body>
+<script>
+    var nummcq, numsa;
+    getNumQns().then((param)=>{
+        nummcq = param.nummcq
+        numsa = param.numsa;
+        buildMCQ(qnwrapper, nummcq, 0);
+        buildSRQ(qnwrapper, numsa, nummcq);
+        getQuestions('junior',numsa+nummcq, select, putAns, updateFileArray);
+    });
+</script>
+</html>

@@ -1,0 +1,59 @@
+<html>
+
+<head>
+    <title>ACMC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="script.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body style="background-color: 325aa0;">
+    <img id="bg" src='../assets/bg.png' style="opacity:0.3;filter: blur(3px);
+    max-width:100%;max-height:100%;width:100vw;height: 100vh;
+    object-fit: cover;">
+    <div id="login-square">
+
+        <div><img src="../assets/logo.png" style="max-width: 100%;"> </div-->
+        <!--div class="acmc" id="acmc" style="padding: 0 10px;justify-content: center;flex:1;font-size: 50px;">ACMC</div-->
+
+        <div style="display: block;">
+            <div class="form-title">Username</div>
+            <input type="text" placeholder="Username" id="username"></input>
+        </div>
+        <div style="display:block;margin-bottom: 30px;">
+            <div class="form-title">Password
+                
+            </div>
+            <input type="password" placeholder="••••••" id="password"> </input>
+        </div>
+        <div id="incorrect" style="text-align: center;color: red;font-style: italic;"></div>
+        <button type="button" id="login-button" onclick="login()" autofocus>LOG IN</button>
+
+    </div>
+    <div id="load" class="hidden">
+        <div class="popup">
+            <div style="margin: 0 0 20px;font-size: 20px;">Loading...</div>
+            <div class="loader"></div>
+
+        </div>
+        <div class="dimmer"></div>
+    </div>
+</body>
+<script>
+    var u = document.getElementById("username");
+    u.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("login-button").click();
+    }});
+    var p = document.getElementById("password");
+    p.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("login-button").click();
+    }});
+    var yr = new Date().getFullYear();
+    document.getElementById("acmc").innerHTML += " "+ yr; 
+    document.title += " "+ yr + " Login";
+</script>
+</html>
