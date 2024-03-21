@@ -365,7 +365,11 @@ function handleErrors(resp) {
     if (resp.msg == "Token Error") {
         location.href = "index";
         alert("Login timeout. Please sign in again.");
-    } else {
+    } else if(resp.msg == "No such question") {
+
+    }else if(resp.msg == "No instruction") {
+
+    }else {
         console.log(resp);
         alert("Response error");
     }
