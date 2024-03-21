@@ -168,8 +168,8 @@ function handleImageUpload(event, questionNumber) {
     }
 
     // Check if size (in bytes) exceeds 2 MB
-    if (image.size > 2_000_000) {
-        return alert('Maximum upload size is 2MB!');
+    if (image.size > 500_000) {
+        return alert('Maximum upload size is 500kb!');
     }
     files[questionNumber - 1] = image;
     const fileReader = new FileReader();
