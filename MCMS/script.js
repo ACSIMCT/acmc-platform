@@ -11,8 +11,7 @@ async function post(payload) {
     payload["main"] = "MCMS";
 
     // Cloudflare workers
-    const url = "https://acmc-server.lwk19.workers.dev";
-    //const url = "http://127.0.0.1:8787";
+    const url = "https://acmc-server.mct-acs-independent.workers.dev";
 
     var req = await fetch(url, {
         method: "POST",
