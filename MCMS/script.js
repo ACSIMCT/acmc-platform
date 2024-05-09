@@ -11,7 +11,7 @@ async function post(payload) {
     payload["main"] = "MCMS";
 
     // Cloudflare workers
-    const url = "https://acmc-server.mct-acs-independent.workers.dev";
+    const url = "https://acmc-server.lwk19.workers.dev";
     //const url = "http://127.0.0.1:8787";
 
     var req = await fetch(url, {
@@ -61,9 +61,7 @@ async function updateCompetitionDetails() {
 
     const details = { "acmc_time": acmc_time, "duration": duration, "buffer": buffer, "nummcq": nummcq, "numsa": numsa }
     const resp = await post({ "method": "updateCompetitionDetails", "token": getCookie("token"), "details": details });
-    if (resp.success) {
-        //TODO: display confirmation message
-    } else {
+    if (!resp.success) {
         handleErrors(resp);
     }
 }
@@ -71,9 +69,11 @@ async function updateCompetitionDetails() {
 async function getCompetitionDetails() {
     const resp = await post({ "method": "getCompetitionDetails", "token": getCookie("token") });
     if (resp.success) {
-        const acmc_time = new Date(resp.reply.acmc_time);
-        document.getElementById('date').valueAsDate = acmc_time;
-        document.getElementById('starttime').valueAsDate = acmc_time;
+        var acmc_time = new Date(resp.reply.acmc_time);
+        acmc_time = new Date(acmc_time.getTime() - acmc_time.getTimezoneOffset()*60*1000);
+
+        document.getElementById('date').value = acmc_time.toISOString().split('T')[0];
+        document.getElementById('starttime').value = acmc_time.toISOString().split('T')[1].split('.')[0];
         document.getElementById('duration').value = resp.reply.duration;
         document.getElementById('buffer').value = resp.reply.buffer;
         document.getElementById('nummcq').value = resp.reply.nummcq;
@@ -93,9 +93,7 @@ async function updateInstructions() {
         arr[i] = cells[i].value;
     }
     const resp = await post({ "method": "updateInstructions", "token": getCookie("token"), "instructions": arr });
-    if (resp.success) {
-        //TODO: display confirmation message
-    } else {
+    if (!resp.success) {
         handleErrors(resp);
     }
 }
@@ -148,9 +146,7 @@ async function updateQuestions(section, arr) {
         if (arr[i].file != null) {
             arr[i].file = await blobToBase64(arr[i].file);
             const resp = await post({ "method": "updateQuestions", "section": section, "token": getCookie("token"), "qn": arr[i] });
-            if (resp.success) {
-                //TODO: display confirmation message
-            } else {
+            if (!resp.success) {
                 handleErrors(resp);
             }
         }
@@ -227,16 +223,11 @@ async function updateParticipants(section) {
     for (var i = 0; i < cells.length; i++) {
         if (!cells[i].reportValidity()) return;
     }
-    // TODO delete first, then split if more than 50 rows
-    const resp = await post({ "method": "deleteParticipants", "section": section, "token": getCookie("token") });
-    if (!resp.success) {
-        handleErrors(resp);
-    }
+    
     var participants = [];
-    var idx = 1;
     for (var i = 1; i < table.rows.length; i++) {
         var currRow = table.rows[i].cells;
-        participants[idx - 1] = {
+        participants[i - 1] = {
             'name': currRow[0].children[0].value,
             "class": currRow[1].children[0].value,
             "id": currRow[2].children[0].value,
@@ -246,22 +237,19 @@ async function updateParticipants(section) {
             "time": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
             "token": "init_token"
         }
-        idx++;
-        if (idx % 40 == 0) {
-            const resp2 = await post({ "method": "insertParticipants", "section": section, "token": getCookie("token"), "participants": participants });
-            if (!resp2.success) {
-                handleErrors(resp2);
-            }
-            participants = [];
-            idx = 1;
-        }
-
     }
-    const resp2 = await post({ "method": "insertParticipants", "section": section, "token": getCookie("token"), "participants": participants });
-    if (resp2.success) {
-        //TODO: display confirmation message
-    } else {
-        handleErrors(resp2);
+    // delete entries not in current list
+    const resp = await post({ "method": "deleteParticipants", "section": section, "token": getCookie("token"), "ids": participants.map(x => x.id)});
+    if (!resp.success) {
+        handleErrors(resp);
+    }
+
+    // upsert entries
+    for (var i = 0; i < participants.length/40 + 1; i++) {
+        const resp2 = await post({ "method": "insertParticipants", "section": section, "token": getCookie("token"), "participants": participants.slice(i*40, Math.min(participants.length, (i+1)*40+1)) });
+        if (!resp2.success) {
+            handleErrors(resp2);
+        }
     }
 }
 
@@ -280,6 +268,62 @@ async function getParticipants(section) {
             currRow[1].children[0].value = resp.reply[i].class;
             currRow[2].children[0].value = resp.reply[i].id;
             currRow[3].children[0].value = resp.reply[i].password;
+
+            //add rows
+            if (i < resp.reply.length - 1) {
+                var numcol = table.rows[0].cells.length;
+                var row = table.insertRow(i + 2);
+                var cells = [];
+                for (var j = 0; j < numcol; j++) {
+                    cells.push(row.insertCell(j));
+                    cells[j].innerHTML = currRow[j].innerHTML;
+                }
+                cells[0].getElementsByTagName('input')[0].focus();
+            }
+        }
+    } else {
+        handleErrors(resp);
+    }
+}
+
+async function resetParticipants(section) {
+    const resp = await post({ "method": "resetParticipants", "section": section, "token": getCookie("token") });
+    if (!resp.success) {
+        handleErrors(resp);
+    }
+}
+
+async function updateMCMSPassword() {
+    var table = document.getElementById('mcmscredentialstable');
+
+    var cells = table.querySelectorAll("[required]")
+    for (var i = 0; i < cells.length; i++) {
+        if (!cells[i].reportValidity()) return;
+    }
+
+    var credentials = [];
+    for (var i = 1; i < table.rows.length; i++) {
+        var currRow = table.rows[i].cells;
+        credentials[i - 1] = {
+            "id": currRow[0].children[0].value,
+            "password": currRow[1].children[0].value,
+        }
+    }
+    const resp2 = await post({ "method": "updateMCMSPassword", "token": getCookie("token"), "credentials": credentials });
+    if (!resp2.success) {
+        handleErrors(resp2);
+    }
+}
+
+async function getMCMSCredentials() {
+    var table = document.getElementById('mcmscredentialstable');
+
+    const resp = await post({ "method": "getParticipants", "section": "mcms", "token": getCookie("token") });
+    if (resp.success) {
+        for (var i = 0; i < resp.reply.length; i++) {
+            var currRow = table.rows[i + 1].cells;
+            currRow[0].children[0].value = resp.reply[i].id;
+            currRow[1].children[0].value = resp.reply[i].password;
 
             //add rows
             if (i < resp.reply.length - 1) {
@@ -365,11 +409,7 @@ function handleErrors(resp) {
     if (resp.msg == "Token Error") {
         location.href = "index";
         alert("Login timeout. Please sign in again.");
-    } else if(resp.msg == "No such question") {
-
-    }else if(resp.msg == "No instruction") {
-
-    }else {
+    } else {
         console.log(resp);
         alert("Response error");
     }

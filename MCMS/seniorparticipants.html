@@ -25,11 +25,14 @@
         <button id="the-button"  class="sidebtn" onclick="window.location.href='seniorparticipants'"><span>Edit Senior<br>Participants</span></button>
         <button class="sidebtn" value="juniordownload" onclick="window.location.href='juniordownloadpage'"><span>View Junior<br>Results</span></button>
         <button class="sidebtn" value="seniordownload" onclick="window.location.href='seniordownloadpage'"><span>View Senior<br>Results</span></button>
+        <button class="sidebtn" value="mcmscredentials" onclick="window.location.href='mcmscredentials'"><span>MCMS Credentials</span></button>
         <button id = "logout" class="sidebtn" onclick="window.location.href='index'"><i class="fa-solid fa-arrow-right-from-bracket"></i>  <span>Log Out</span></button>
     </div>
     <div class="main-content centre" style="flex-direction: column; align-items: center;">
+        <h3 style="margin-top: 0px; margin-bottom: 12px;">Warning: Reset Answers will delete all submitted answers and recorded times. Use this only when testing or after the results have been downloaded. </h3>
         <div class="centre-button">
-            <button style="width: max-content; padding: 18px;" onClick="updateParticipants('senior')"><i class="fa-solid fa-floppy-disk"></i> <span>Save</span></button>
+            <button style="width: max-content; padding: 18px;margin-right: 24px;" onClick="updateParticipants('senior')"><i class="fa-solid fa-floppy-disk"></i> <span>Save</span></button>
+            <button style="width: max-content; padding: 18px;" onClick="document.getElementById('confirmReset').classList.remove('hidden');document.getElementById('confirmReset').classList.add('visible')"><i class="fa-solid fa-rotate-left"></i> <span>Reset Answers</span></button>
         </div>
         <div class="table-container">
             <table id="srparticipanttable">
@@ -52,6 +55,26 @@
         <div class="centre-button">
             <button style="width: max-content; padding: 18px;" onClick="addNewInputRow(srparticipanttable)"><i class="fa-solid fa-plus"></i> <span>Add New Participant</span></button>
         </div>
+    </div>
+    <div id="confirmReset" class="hidden">
+        <div class="popup" style="padding: 20px 50px;height:auto;">
+            <div>
+                <h1 style="font-size: 30px;">Attention!</h1>
+            </div>
+            <hr>
+            <div style="padding: 20px 30px 30px;">Are you sure you want to reset answers for <b><i>all participants</i></b>? 
+                <br> This will remove all answers submitted and their respective times, time started and time finished for each participant. </div>
+            <div>
+                <button type="button" style="width: 100px;border-radius: 5px;border-width: 0px;border-style: solid;padding: 5px;padding-top: 4px;margin: 10px 5px;cursor: pointer;
+                box-shadow: 0px 2px 5px grey;background-color: lightgreen;color:black" onclick="resetParticipants('senior');document.getElementById('confirmReset').classList.remove('visible');document.getElementById('confirmReset').classList.add('hidden');">
+                    Confirm</button>
+                <button type="button" style="width: 100px;border-radius: 5px;border-width: 0px;border-style: solid;padding: 5px;padding-top: 4px;margin: 10px 5px;cursor: pointer;
+                box-shadow: 0px 2px 5px grey;background-color: red;color:black"
+                    onclick="document.getElementById('confirmReset').classList.remove('visible');document.getElementById('confirmReset').classList.add('hidden');">
+                    Cancel</button>
+            </div>
+        </div>
+        <div class="dimmer"></div>
     </div>
     <div id="load" class="hidden">
         <div class="popup">

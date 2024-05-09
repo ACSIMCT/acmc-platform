@@ -167,9 +167,9 @@ function handleImageUpload(event, questionNumber) {
         return alert('Only images are allowed!');
     }
 
-    // Check if size (in bytes) exceeds 2 MB
+    // Check if size (in bytes) exceeds 500kB
     if (image.size > 500_000) {
-        return alert('Maximum upload size is 500kb!');
+        return alert('Maximum upload size is 500kB!');
     }
     files[questionNumber - 1] = image;
     const fileReader = new FileReader();
