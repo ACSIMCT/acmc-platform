@@ -407,7 +407,7 @@ async function downloadResults(section) {
 }
 
 function prettyTime(time) {
-    return time == "" ? "" : new Date(time).toLocaleTimeString("en-SG");
+    return time == "" ? "" : new Date(time).toLocaleTimeString("en-SG").toString();
 }
 
 function handleErrors(resp) {
