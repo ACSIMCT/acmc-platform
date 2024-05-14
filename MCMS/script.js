@@ -388,10 +388,10 @@ async function downloadResults(section) {
             csv += '"' + obj.class + '",'
             csv += '"' + obj.id + '",'
             csv += '"' + obj.password + '",'
-            csv += '"' + (new Date(obj.time_started)).toLocaleTimeString("en-SG") + '",'
+            csv += '"' + prettyTime(obj.time_started) + '",'
             csv += obj.ans + ','
-            csv += obj.time.map(x => (new Date(x)).toLocaleTimeString("en-SG")) + ','
-            csv += '"' + (new Date(obj.time_finished)).toLocaleTimeString("en-SG") + '"';
+            csv += obj.time.map(x => prettyTime(x)) + ','
+            csv += '"' + prettyTime(obj.time_finished) + '"';
             csv += '\n';
         }
         var encodedUri = encodeURI(csv);
@@ -404,6 +404,10 @@ async function downloadResults(section) {
     } else {
         handleErrors(resp);
     }
+}
+
+function prettyTime(time) {
+    return time == "" ? "" : new Date(time).toLocaleTimeString("en-SG");
 }
 
 function handleErrors(resp) {
