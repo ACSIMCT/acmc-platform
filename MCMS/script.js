@@ -387,8 +387,8 @@ async function downloadResults(section) {
             csv += '"' + obj.id + '",'
             csv += '"' + obj.password + '",'
             csv += '"' + obj.time_started + '",'
-            csv += '"' + obj.ans + '",'
-            csv += '"' + obj.time + '",'
+            csv += obj.ans + ','
+            csv += obj.time + ','
             csv += '"' + obj.time_finished + '"';
             csv += '\n';
         }
