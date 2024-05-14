@@ -388,10 +388,10 @@ async function downloadResults(section) {
             csv += '"' + obj.class + '",'
             csv += '"' + obj.id + '",'
             csv += '"' + obj.password + '",'
-            csv += '"' + obj.time_started + '",'
+            csv += '"' + (new Date(obj.time_started)).toLocaleTimeString("en-SG") + '",'
             csv += obj.ans + ','
-            csv += obj.time + ','
-            csv += '"' + obj.time_finished + '"';
+            csv += obj.time.map(x => (new Date(x)).toLocaleTimeString("en-SG")) + ','
+            csv += '"' + (new Date(obj.time_finished)).toLocaleTimeString("en-SG") + '"';
             csv += '\n';
         }
         var encodedUri = encodeURI(csv);
