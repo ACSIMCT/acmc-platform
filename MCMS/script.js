@@ -377,8 +377,8 @@ async function downloadResults(section) {
     if (resp.success) {
         var csv = "data:text/csv;charset=utf-8,"
         var arrcomma = ""
-        for (var i = 0; i < resp.reply[0].ans.length; i++) arrcomma += ',';
-        csv += "name,class,id,password,time_started,ans" + arrcomma + "time" + arrcomma + "time_finished"
+        for (var i = 0; i < resp.reply[0].ans.length; i++) arrcomma += 'Q' + (i+1) + ',';
+        csv += "name,class,id,password,time_started," + arrcomma + arrcomma + "time_finished";
         csv += '\n';
         for (var i = 0; i < resp.reply.length; i++) {
             const obj = resp.reply[i];
