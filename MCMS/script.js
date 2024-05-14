@@ -382,14 +382,14 @@ async function downloadResults(section) {
         csv += '\n';
         for (var i = 0; i < resp.reply.length; i++) {
             const obj = resp.reply[i];
-            csv += obj.name + ','
-            csv += obj.class + ','
-            csv += obj.id + ','
-            csv += obj.password + ','
-            csv += obj.time_started + ','
-            csv += obj.ans + ','
-            csv += obj.time + ','
-            csv += obj.time_finished;
+            csv += '"' + obj.name + '",'
+            csv += '"' + obj.class + '",'
+            csv += '"' + obj.id + '",'
+            csv += '"' + obj.password + '",'
+            csv += '"' + obj.time_started + '",'
+            csv += '"' + obj.ans + '",'
+            csv += '"' + obj.time + '",'
+            csv += '"' + obj.time_finished + '"';
             csv += '\n';
         }
         var encodedUri = encodeURI(csv);
