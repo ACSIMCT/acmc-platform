@@ -376,9 +376,11 @@ async function downloadResults(section) {
     const resp = await post({ "method": "getParticipants", "section": section, "token": getCookie("token") });
     if (resp.success) {
         var csv = "data:text/csv;charset=utf-8,"
-        var arrcomma = ""
-        for (var i = 0; i < resp.reply[0].ans.length; i++) arrcomma += 'Q' + (i+1) + ',';
-        csv += "name,class,id,password,time_started," + arrcomma + arrcomma + "time_finished";
+        var qnarray = ""
+        for (var i = 0; i < resp.reply[0].ans.length; i++) qnarray += 'Q' + (i+1) + ',';
+        var timearray = ""
+        for (var i = 0; i < resp.reply[0].ans.length; i++) timearray += 'Q' + (i+1) + '_time-submitted,';
+        csv += "name,class,id,password,time_started," + qnarray + timearray + "time_finished";
         csv += '\n';
         for (var i = 0; i < resp.reply.length; i++) {
             const obj = resp.reply[i];
